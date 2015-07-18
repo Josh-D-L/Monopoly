@@ -1,0 +1,49 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<h4 style="text-align: center;">
+			Number Guesser
+		</h4>
+		<span>Number of players: <input id="numPlayers" type="number" min=2 max=6 value=2><br>
+		<button onclick="numPlayers();">Submit</button><br></span>
+		From 0 to 10^<input id="numbers" type="number" min=1 max=16 value=1><br>
+		<span id="Result">
+		
+		</span>
+		<script>
+			function numPlayers() {
+				var numPlayers = document.getElementById("numPlayers").value - 1;
+				sessionStorage.setItem("numPlayers", numPlayers);
+				document.body.firstElementChild.nextElementSibling.innerHTML = "";
+				for (var x = 0; x <= numPlayers; x++) {
+					document.body.firstElementChild.nextElementSibling.innerHTML += '<span>Player ' + (x + 1) + ': <input id="playerName' + x + '" type="text" placeholder="Name"><input id="playerGuess' + x + '" type="number" placeholder="Guess" style="width:120px;"></span><br>';
+				}
+				document.getElementById("Result").innerHTML += "<button onclick='play();'>Play</button><br><span></span>";
+			}
+			
+			function play() {
+				var playerNames = [];
+				var playerGuess = [];
+				var numPlayers = sessionStorage.getItem("numPlayers");
+				for (var x = 0; x <= numPlayers; x++) {
+					playerNames.push(document.getElementById("playerName" + x).value);
+					playerGuess.push(document.getElementById("playerGuess" + x).value);
+				}
+				var number = Math.random();
+				number = number * Math.pow(10, Number(document.getElementById("numbers").value));
+				number = Math.round(number);
+				var closest = Math.abs(number - playerGuess[0]);
+				var closestPlayer = 0;
+				for (var x = 1; x <= numPlayers; x++) {
+					if (Math.abs(number - playerGuess[x]) < closest) {
+						closest = Math.abs(number - playerGuess[x]);
+						closestPlayer = x;	
+					}
+				}
+				document.getElementById("Result").children[2].innerHTML = "Play Again";
+				document.getElementById("Result").lastElementChild.innerHTML = "The closest player was " + playerNames[closestPlayer] + " with " + playerGuess[closestPlayer] + ". The number was " + number + ".";
+			}
+		</script>
+	</body>
+</html>
